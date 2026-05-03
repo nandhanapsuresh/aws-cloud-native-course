@@ -1,30 +1,30 @@
-version: 0.2
+# version: 0.2
 
-env:
-  variables:
-    AWS_REGION: "ap-south-2"
-    ECR_REPO: "991524241826.dkr.ecr.ap-south-2.amazonaws.com/nandhana-course-app"
+# env:
+#   variables:
+#     AWS_REGION: "ap-south-2"
+#     ECR_REPO: "991524241826.dkr.ecr.ap-south-2.amazonaws.com/nandhana-course-app"
 
-phases:
-  pre_build:
-    commands:
-      - aws ecr get-login-password --region $AWS_REGION |
-        docker login --username AWS --password-stdin 991524241826.dkr.ecr.$AWS_REGION.amazonaws.com
-      - export IMAGE_TAG=latest
-  build:
-  commands:
-      - docker build -t $ECR_REPO:$IMAGE_TAG .
-      - docker tag $ECR_REPO:$IMAGE_TAG $ECR_REPO:latest
-  post_build:
-    commands:
-      - docker push $ECR_REPO:$IMAGE_TAG
-      - docker push $ECR_REPO:latest
-      - printf '[{"name":"student-service",
-        "imageUri":"%s"}]' \
-        $ECR_REPO:$IMAGE_TAG > imagedefinitions.json
+# phases:
+#   pre_build:
+#     commands:
+#       - aws ecr get-login-password --region $AWS_REGION |
+#         docker login --username AWS --password-stdin 991524241826.dkr.ecr.$AWS_REGION.amazonaws.com
+#       - export IMAGE_TAG=latest
+#   build:
+#   commands:
+#       - docker build -t $ECR_REPO:$IMAGE_TAG .
+#       - docker tag $ECR_REPO:$IMAGE_TAG $ECR_REPO:latest
+#   post_build:
+#     commands:
+#       - docker push $ECR_REPO:$IMAGE_TAG
+#       - docker push $ECR_REPO:latest
+#       - printf '[{"name":"student-service",
+#         "imageUri":"%s"}]' \
+#         $ECR_REPO:$IMAGE_TAG > imagedefinitions.json
 
-artifacts:
-  files: imagedefinitions.json
+# artifacts:
+#   files: imagedefinitions.json
 # version: 0.2
 
 # env:
@@ -54,3 +54,34 @@ artifacts:
 # artifacts:
 #   files:
 #     - imagedefinitions.json
+
+version: 0.2
+
+env:
+  variables:
+    AWS_REGION: "ap-south-2"
+    ECR_REPO: "991524241826.dkr.ecr.ap-south-2.amazonaws.com/nandhana-course-app"
+
+phases:
+  pre_build:
+    commands:
+      - echo "Logging in to ECR..."
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 991524241826.dkr.ecr.$AWS_REGION.amazonaws.com
+      - export IMAGE_TAG=latest
+
+  build:
+    commands:
+      - echo "Building Docker image..."
+      - docker build -t $ECR_REPO:$IMAGE_TAG .
+      - docker tag $ECR_REPO:$IMAGE_TAG $ECR_REPO:latest
+
+  post_build:
+    commands:
+      - echo "Pushing to ECR..."
+      - docker push $ECR_REPO:$IMAGE_TAG
+      - docker push $ECR_REPO:latest
+      - printf '[{"name":"course-service","imageUri":"%s"}]' $ECR_REPO:$IMAGE_TAG > imagedefinitions.json
+
+artifacts:
+  files:
+    - imagedefinitions.json
