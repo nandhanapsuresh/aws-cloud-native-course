@@ -2,10 +2,14 @@ import os
 import boto3
 from flask import Flask, jsonify
 from flask import request
+from flask_cors import CORS
+
 
 client = boto3.client('sts')
 print(client.get_caller_identity())
 app = Flask(__name__)
+CORS(app, origins=[
+     "http://nandhana-course-public.s3-website.ap-south-2.amazonaws.com"])
 
 
 REGION = os.environ.get("AWS_REGION", "ap-south-2")
