@@ -14,7 +14,7 @@ spec:
         app.kubernetes.io/name: app-2048-nandhana
     spec:
       containers:
-        - image: 991524241826.dkr.ecr.ap-south-2.amazonaws.com/nandhana-course-app:final
+        - image: 991524241826.dkr.ecr.ap-south-2.amazonaws.com/nandhana-course-app:latest
           imagePullPolicy: Always
           name: app-2048-nandhana
           ports:
@@ -42,7 +42,10 @@ metadata:
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
+<<<<<<< HEAD
     # newly added
+=======
+>>>>>>> c4b6425 (Updated course-service component)
     alb.ingress.kubernetes.io/group.name: students-app
     alb.ingress.kubernetes.io/healthcheck-path: /health
 spec:
@@ -50,7 +53,7 @@ spec:
   rules:
     - http:
         paths:
-          - path: /
+          - path: /nandhana-student
             pathType: Prefix
             backend:
               service:
