@@ -63,11 +63,19 @@ env:
     ECR_REPO: "991524241826.dkr.ecr.ap-south-2.amazonaws.com/nandhana-course-app"
 
 phases:
+  # pre_build:
+  #   commands:
+  #     - echo "Logging in to ECR..."
+  #     - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 991524241826.dkr.ecr.$AWS_REGION.amazonaws.com
+  #     - export IMAGE_TAG=latest
   pre_build:
     commands:
+      - echo "Checking AWS identity..."
+      - aws sts get-caller-identity          # confirms IAM role is working
+      - aws --version
+      - docker --version
       - echo "Logging in to ECR..."
-      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 991524241826.dkr.ecr.$AWS_REGION.amazonaws.com
-      - export IMAGE_TAG=latest
+      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 991524241826.dkr.ecr.ap-south-1.amazonaws.com
 
   build:
     commands:
